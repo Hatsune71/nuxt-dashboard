@@ -39,18 +39,18 @@ definePageMeta({
   auth: true,
 })
 
-// 1. Ambil data statistik melalui proxy
 const { data: statsData, pending: statsPending } = useFetch<{ data: DashboardStats }>('/api/proxy/dashboard/stats')
-
-// 2. Ambil 5 pernikahan terbaru melalui proxy
 const { data: recentWeddings, pending: weddingsPending } = useFetch<{ data: RecentWedding[] }>('/api/proxy/weddings', {
-  query: { limit: 5 } // Backend Anda harus mendukung query 'limit' ini
+  query: { limit: 5 }
 })
 
 const stats = computed(() => statsData.value?.data)
 </script>
 
 <template>
+  <Head>
+      <title>Dashboard</title>
+  </Head>
   <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
@@ -72,7 +72,6 @@ const stats = computed(() => statsData.value?.data)
       </header>
 
   <main class="flex flex-1 flex-col gap-4 p-4 pt-0">
-    <!-- Bagian Kartu Ringkasan -->
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -120,7 +119,6 @@ const stats = computed(() => statsData.value?.data)
       </Card>
     </div>
 
-    <!-- Bagian Tabel Pernikahan Terbaru -->
     <Card>
       <CardHeader>
         <CardTitle>Pernikahan Terbaru</CardTitle>

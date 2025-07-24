@@ -43,7 +43,7 @@ async function handleSubmit() {
   data.append('file', selectedFile.value)
 
   try {
-    await $fetch('/api/galleries', {
+    await $fetch(`/api/proxy/weddings/${selectedWeddingId.value}/gallery`, {
       method: 'POST',
       body: data,
     })

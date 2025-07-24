@@ -9,49 +9,41 @@ definePageMeta({
   auth: true,
 })
 
-// Dapatkan data sesi untuk memeriksa role pengguna
 const { data: session } = useAuth()
 const isAdmin = computed(() => session.value?.user?.role === 'ADMIN')
 
-// State untuk dialog dan data yang sedang diedit
 const isDialogOpen = ref(false)
 const currentTemplate = ref<Template | null>(null)
 
-// Mengambil data template
 const { data: templates, pending, refresh } = await useFetch('/api/proxy/templates')
 
-// Fungsi untuk membuka dialog dalam mode "Create"
 function openCreateDialog() {
   currentTemplate.value = null
   isDialogOpen.value = true
 }
 
-// Fungsi untuk membuka dialog dalam mode "Edit"
 function openEditDialog(template: Template) {
   currentTemplate.value = template
   isDialogOpen.value = true
 }
 
-// Fungsi untuk menangani penghapusan data
 async function handleDelete(templateId: string) {
   if (!confirm('Apakah Anda yakin ingin menghapus template ini? Ini tidak dapat diurungkan.')) return
 
   try {
     await $fetch(`/api/proxy/templates/${templateId}`, { method: 'DELETE' })
     toast.success('Template deleted successfully.')
-    refresh() // Muat ulang data tabel
+    refresh()
   } catch (error: any) {
     toast.error(error.data?.statusMessage || 'An error occurred')
   }
 }
 
-// Fungsi yang dipanggil setelah form berhasil disubmit
 function onFormSuccess() {
   isDialogOpen.value = false
-  refresh() // Muat ulang data tabel
+  refresh()
 }
 
-// Fungsi untuk format harga menjadi Rupiah
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -62,6 +54,9 @@ const formatCurrency = (value: number) => {
 </script>
 
 <template>
+  <Head>
+    <title>Templates</title>
+  </Head>
   <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
@@ -84,20 +79,17 @@ const formatCurrency = (value: number) => {
   <div class="p-8">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold">Templates</h1>
-      <!-- Tampilkan tombol hanya jika user adalah ADMIN -->
       <Button v-if="isAdmin" @click="openCreateDialog">
         Buat Template Baru
       </Button>
     </div>
 
-    <!-- Menampilkan tabel data template -->
     <div class="border rounded-lg">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Nama Template</TableHead>
             <TableHead>Harga</TableHead>
-            <!-- Tampilkan kolom Aksi hanya jika user adalah ADMIN -->
             <TableHead v-if="isAdmin" class="text-right">Aksi</TableHead>
           </TableRow>
         </TableHeader>
@@ -126,7 +118,6 @@ const formatCurrency = (value: number) => {
       </Table>
     </div>
 
-    <!-- Dialog untuk form Create/Update (hanya bisa diakses ADMIN) -->
     <Dialog v-if="isAdmin" v-model:open="isDialogOpen">
       <DialogContent class="sm:max-w-[425px]">
         <DialogHeader>

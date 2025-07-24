@@ -24,15 +24,12 @@ definePageMeta({
   auth: true,
 })
 
-// State untuk menyimpan wedding yang dipilih dan daftar ucapannya
 const selectedWeddingId = ref<string | null>(null)
 const wishes = ref<Wish[]>([])
 const isLoading = ref(false)
 
-// Ambil daftar wedding milik user untuk ditampilkan di dropdown
 const { data: weddings } = useFetch('/api/proxy/weddings')
 
-// Fungsi untuk mengambil data ucapan ketika wedding dipilih
 async function fetchWishes() {
   if (!selectedWeddingId.value) {
     wishes.value = []
@@ -50,10 +47,8 @@ async function fetchWishes() {
   }
 }
 
-// Gunakan 'watch' untuk memanggil fetchWishes setiap kali selectedWeddingId berubah
 watch(selectedWeddingId, fetchWishes, { immediate: true })
 
-// Fungsi untuk menghapus ucapan
 async function handleDelete(wishId: string) {
   if (!confirm('Apakah Anda yakin ingin menghapus ucapan ini?')) return
 
@@ -68,6 +63,9 @@ async function handleDelete(wishId: string) {
 </script>
 
 <template>
+  <Head>
+    <title>Wishes</title>
+  </Head>
   <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
@@ -90,7 +88,6 @@ async function handleDelete(wishId: string) {
   <div class="p-8">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold">Wishes</h1>
-      <!-- Dropdown untuk memilih wedding -->
       <Select v-if="weddings" v-model="selectedWeddingId">
         <SelectTrigger class="w-[280px]">
           <SelectValue placeholder="Pilih Wedding untuk dilihat..." />
@@ -103,7 +100,6 @@ async function handleDelete(wishId: string) {
       </Select>
     </div>
 
-    <!-- Menampilkan tabel data ucapan -->
     <div class="border rounded-lg">
       <Table>
         <TableHeader>

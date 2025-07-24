@@ -25,6 +25,7 @@ defineProps<{
     items?: {
       title: string
       url: string
+      isActive?: boolean
     }[]
   }[]
 }>()
@@ -51,11 +52,21 @@ defineProps<{
           </CollapsibleTrigger>
           <CollapsibleContent>
             <SidebarMenuSub>
-              <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title">
+              <SidebarMenuSubItem
+                v-for="subItem in item.items"
+                :key="subItem.title"
+              >
                 <SidebarMenuSubButton as-child>
-                  <a :href="subItem.url">
-                    <span>{{ subItem.title }}</span>
-                  </a>
+                  <NuxtLink
+                    :to="subItem.url"
+                    class="block w-full px-3 py-1.5 rounded-md transition-colors"
+                    :class="{
+                      'bg-muted text-primary font-medium': subItem.isActive,
+                      'hover:bg-muted/50 text-muted-foreground': !subItem.isActive,
+                    }"
+                  >
+                    {{ subItem.title }}
+                  </NuxtLink>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
             </SidebarMenuSub>

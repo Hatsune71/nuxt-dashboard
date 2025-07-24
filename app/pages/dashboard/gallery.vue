@@ -28,7 +28,7 @@ async function fetchGallery() {
   }
   isLoading.value = true
   try {
-    galleryItems.value = await $fetch<Gallery[]>(`/api/proxy/galleries?weddingId=${selectedWeddingId.value}`)
+    galleryItems.value = await $fetch<Gallery[]>(`/api/proxy/weddings/${selectedWeddingId.value}/gallery`)
   } catch (error) {
     toast.error('Gagal memuat galeri.')
     galleryItems.value = []
@@ -56,6 +56,9 @@ async function handleDelete(itemId: string) {
 }
 </script>
 <template>
+  <Head>
+      <title>Gallery</title>
+  </Head>
   <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
@@ -69,7 +72,7 @@ async function handleDelete(itemId: string) {
               </BreadcrumbItem>
               <BreadcrumbSeparator class="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Home</BreadcrumbPage>
+                <BreadcrumbPage>Gallery</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

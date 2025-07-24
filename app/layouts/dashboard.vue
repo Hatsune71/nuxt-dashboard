@@ -18,7 +18,7 @@ import { Toaster } from 'vue-sonner'
 </script>
 
 <template>
-    <Toaster rich-colors position="top-right" />
+    <Toaster rich-colors position="bottom-right" />
     <SidebarProvider>
     <AppSidebar />
     <SidebarInset>

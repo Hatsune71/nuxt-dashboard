@@ -24,4 +24,12 @@ export default defineNuxtConfig({
       login: '/login' 
     }
   },
+  runtimeConfig: {
+    auth: {
+      secret: process.env.API_KEY,
+    },
+    public: {
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+    }
+  },
 })

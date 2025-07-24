@@ -9,28 +9,22 @@ definePageMeta({
   auth: true,
 })
 
-// State untuk dialog dan data yang sedang diedit
 const isDialogOpen = ref(false)
 const currentWedding = ref<Wedding | null>(null)
 
-// Mengambil data wedding dan template
 const { data: weddings, pending, refresh } = await useFetch('/api/proxy/weddings')
-// (Asumsi Anda sudah punya API untuk mengambil template)
-const { data: templates } = await useFetch('/api/proxy/templates') // Ganti dengan endpoint Anda
+const { data: templates } = await useFetch('/api/proxy/templates')
 
-// Fungsi untuk membuka dialog dalam mode "Create"
 function openCreateDialog() {
   currentWedding.value = null
   isDialogOpen.value = true
 }
 
-// Fungsi untuk membuka dialog dalam mode "Edit"
 function openEditDialog(wedding: Wedding) {
   currentWedding.value = wedding
   isDialogOpen.value = true
 }
 
-// Fungsi untuk menangani penghapusan data
 async function handleDelete(weddingId: string) {
   if (!confirm('Apakah Anda yakin ingin menghapus data wedding ini?')) return
 
@@ -43,14 +37,16 @@ async function handleDelete(weddingId: string) {
   }
 }
 
-// Fungsi yang dipanggil setelah form berhasil disubmit
 function onFormSuccess() {
   isDialogOpen.value = false
-  refresh() // Muat ulang data tabel
+  refresh()
 }
 </script>
 
 <template>
+  <Head>
+    <title>Weddings</title>
+  </Head>
   <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1" />
@@ -78,7 +74,6 @@ function onFormSuccess() {
       </Button>
     </div>
 
-    <!-- Menampilkan tabel data wedding -->
     <div class="border rounded-lg">
       <Table>
         <TableHeader>
@@ -117,7 +112,6 @@ function onFormSuccess() {
       </Table>
     </div>
 
-    <!-- Dialog untuk form Create/Update -->
     <Dialog v-model:open="isDialogOpen">
       <DialogContent class="sm:max-w-[425px]">
         <DialogHeader>
