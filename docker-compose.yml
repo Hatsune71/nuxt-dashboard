@@ -5,31 +5,17 @@ services:
       dockerfile: Dockerfile
     container_name: nuxt1
     environment:
-      NUXT_PUBLIC_API_BASE_URL: "https://api.aeraapps.my.id/api/v1"
+      NUXT_PUBLIC_API_BASE_URL: "http://localhost:3001/api/v1"
       NUXT_AUTH_SECRET: "secret_key_yang_sangat_aman_dan_panjang"
       AUTH_TRUST_HOST: "true"
-      AUTH_ORIGIN: "https://dashboard.aeraapps.my.id/api/auth"
+      AUTH_ORIGIN: "http://localhost/api/auth"
       API_KEY: "super-secret-gez-studio-up-2354132352523w5!!!!@@@$!@^&^^%^^^-API"
-      NITRO_PORT: 3001
+      GOOGLE_CLIENT_ID: "365969610466-mgkgc3tgtubqa0k441dnrf0e6ia36tfa.apps.googleusercontent.com"
+      GOOGLE_CLIENT_SECRET: "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"
+      GOOGLE_CALLBACK_URL: "http://localhost/api/auth/callback/google"
+      NITRO_PORT: 3000
     expose:
-      - "3001"
-    mem_limit: 512m
-    restart: always
-
-  nuxt2:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: nuxt2
-    environment:
-      NUXT_PUBLIC_API_BASE_URL: "https://api.aeraapps.my.id/api/v1"
-      NUXT_AUTH_SECRET: "secret_key_yang_sangat_aman_dan_panjang"
-      AUTH_TRUST_HOST: "true"
-      AUTH_ORIGIN: "https://dashboard.aeraapps.my.id/api/auth"
-      API_KEY: "super-secret-gez-studio-up-2354132352523w5!!!!@@@$!@^&^^%^^^-API"
-      NITRO_PORT: 3002
-    expose:
-      - "3002"
+      - "3000"
     mem_limit: 512m
     restart: always
 
@@ -42,6 +28,5 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - nuxt1
-      - nuxt2
     restart: always
     mem_limit: 512m

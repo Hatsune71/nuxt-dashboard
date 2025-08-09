@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import WeddingForm from '~/components/dashboard/weddings/Form.vue' // Import komponen form
+import WeddingForm from '~/components/dashboard/weddings/Form.vue'
 import { toast } from 'vue-sonner'
 import { Trash2, Edit } from 'lucide-vue-next'
 
@@ -47,25 +47,6 @@ function onFormSuccess() {
   <Head>
     <title>Weddings</title>
   </Head>
-  <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-        <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1" />
-          <Separator orientation="vertical" class="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="/dashboard">
-                  Dashboard
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Weddings</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
   <div class="p-8">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold">Wedding</h1>
@@ -93,10 +74,10 @@ function onFormSuccess() {
           <template v-else-if="weddings && weddings.length > 0">
             <TableRow v-for="wedding in weddings" :key="wedding.id">
               <TableCell class="font-medium">
-                {{ wedding.pengantin_pria }} & {{ wedding.pengantin_wanita }}
+                {{ wedding.groom }} & {{ wedding.bride }}
               </TableCell>
-              <TableCell>{{ new Date(wedding.tanggal_akad).toLocaleDateString() }}</TableCell>
-              <TableCell>{{ wedding.template.nama_template }}</TableCell>
+              <TableCell>{{ new Date(wedding.ceremonyDate).toLocaleDateString() }}</TableCell>
+              <TableCell>{{ wedding.template.templateName }}</TableCell>
               <TableCell class="text-right">
                 <Button variant="ghost" size="icon" @click="openEditDialog(wedding)"><Edit class="h-4 w-4" /></Button>
                 <Button variant="ghost" size="icon"@click="handleDelete(wedding.id)"><Trash2 class="h-4 w-4 text-red-600" /></Button>

@@ -10,23 +10,23 @@ const emit = defineEmits(['success'])
 
 const isLoading = ref(false)
 const formData = ref({
-  nama_template: '',
-  harga: 0,
+  templateName: '',
+  price: 0,
   logo: '',
 })
 
 watchEffect(() => {
   if (props.modelValue) {
     formData.value = {
-      nama_template: props.modelValue.nama_template,
-      harga: props.modelValue.harga,
+      templateName: props.modelValue.templateName,
+      price: props.modelValue.price,
       logo: props.modelValue.logo || '', // Pastikan logo tidak undefined
     }
   } else {
     // Reset form jika dalam mode create
     formData.value = {
-      nama_template: '',
-      harga: 0,
+      templateName: '',
+      price: 0,
     }
   }
 })
@@ -44,7 +44,7 @@ async function handleSubmit() {
       method,
       body: {
         ...formData.value,
-        harga: Number(formData.value.harga) 
+        price: Number(formData.value.price) 
       },
     })
 
@@ -61,16 +61,12 @@ async function handleSubmit() {
 <template>
   <form class="space-y-4" @submit.prevent="handleSubmit">
     <div>
-      <Label for="nama_template" class="mb-4">Nama Template</Label>
-      <Input id="nama_template" v-model="formData.nama_template" required />
+      <Label for="templateName" class="mb-4">Nama Template</Label>
+      <Input id="templateName" v-model="formData.templateName" required />
     </div>
     <div>
-      <Label for="harga" class="mb-4">Harga</Label>
-      <Input id="harga" v-model.number="formData.harga" type="number" required />
-    </div>
-        <div>
-      <Label for="logo" class="mb-4">Logo</Label>
-      <Input id="logo" v-model="formData.logo" required />
+      <Label for="price" class="mb-4">Harga</Label>
+      <Input id="price" v-model.number="formData.price" type="number" required />
     </div>
     <Button type="submit" class="w-full" :disabled="isLoading">
       {{ isLoading ? 'Saving...' : (modelValue ? 'Update Template' : 'Create Template') }}

@@ -37,8 +37,8 @@ async function fetchRsvps() {
   }
   isLoading.value = true
   try {
-    const response = await $fetch<{ data: RSVP[] }>(`/api/proxy/weddings/${selectedWeddingId.value}/rsvps`)
-    rsvps.value = response.data
+    const response = await $fetch<{ data: RSVP[] }>(`/api/proxy/rsvps/${selectedWeddingId.value}`)
+    rsvps.value = response.data || []
   } catch (error) {
     toast.error('Gagal memuat data RSVP.')
     rsvps.value = []
@@ -53,7 +53,7 @@ async function handleDelete(rsvpId: string) {
   if (!confirm('Apakah Anda yakin ingin menghapus data RSVP ini?')) return
 
   try {
-    await $fetch(`/api/proxy/weddings/${selectedWeddingId.value}/rsvps/${rsvpId}`, { method: 'DELETE' })
+    await $fetch(`/api/proxy/rsvps/${rsvpId}`, { method: 'DELETE' })
     toast.success('RSVP berhasil dihapus.')
     fetchRsvps()
   } catch (error: any) {
@@ -66,25 +66,6 @@ async function handleDelete(rsvpId: string) {
   <Head>
     <title>RSVPs</title>
   </Head>
-  <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-        <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1" />
-          <Separator orientation="vertical" class="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="/dashboard">
-                  Dashboard
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>RSVP</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
   <div class="p-8">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-2xl font-bold">RSVP</h1>
@@ -94,7 +75,7 @@ async function handleDelete(rsvpId: string) {
         </SelectTrigger>
         <SelectContent>
           <SelectItem v-for="wedding in weddings" :key="wedding.id" :value="wedding.id">
-            {{ wedding.pengantin_pria }} & {{ wedding.pengantin_wanita }}
+            {{ wedding.groom }} & {{ wedding.bride }}
           </SelectItem>
         </SelectContent>
       </Select>

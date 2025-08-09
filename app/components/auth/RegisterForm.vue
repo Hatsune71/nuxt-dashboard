@@ -31,9 +31,12 @@ async function handleRegister() {
     }
 
   } catch (error: any) {
-    toast.error('Registration Failed', {
-      description: error.data?.statusMessage || 'An unexpected error occurred.',
-    })
+toast.error('Registration Failed', {
+    description:
+      error?.data?.message ||
+      error?.statusMessage ||
+      'An unexpected error occurred.',
+  })
   } finally {
     isLoading.value = false
   }

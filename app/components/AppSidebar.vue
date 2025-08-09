@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SidebarProps } from '@/components/ui/sidebar'
-import { GalleryVerticalEnd, CircleOff } from 'lucide-vue-next'
+import { GalleryVerticalEnd, SwatchBook, ArrowRightLeft} from 'lucide-vue-next'
 import NavMain from '@/components/NavMain.vue'
 import NavUser from '@/components/NavUser.vue'
 import TeamSwitcher from '@/components/TeamSwitcher.vue'
@@ -23,7 +23,6 @@ const route = useRoute()
 
 // Ambil data sesi dan template
 const { data: session } = useAuth()
-const { data: templates } = useFetch('/api/proxy/templates')
 
 // Siapkan data user dengan fallback
 const user = computed(() => {
@@ -34,24 +33,13 @@ const user = computed(() => {
   }
 })
 
-const teams = computed(() => {
-  if (!templates.value || templates.value.length === 0) {
-    return [
-      {
-        name: 'No Templates Available',
+const teams = [
+       {
+        name: 'Gez Wedding',
         logo: 'CircleOff',
         plan: 'N/A',
       },
-    ];
-  }
-
-  return templates.value.map(template => ({
-    name: template.nama_template,
-    logo: 'GalleryVerticalEnd',
-    plan: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(template.harga),
-  }));
-});
-
+]
 const baseNavMain = [
     {
       title: 'Dashboard',
@@ -60,10 +48,6 @@ const baseNavMain = [
        {
           title: 'Home',
           url: '/dashboard',
-        },
-        {
-          title: 'Weddings',
-          url: '/dashboard/weddings',
         },
         {
           title: 'Templates',
@@ -75,18 +59,46 @@ const baseNavMain = [
         },
         {
           title: 'RSVP',
-          url: '/dashboard/rsvps', // Pastikan URL ini benar
-        },
-        {
-          title: 'Gifts',
-          url: '/dashboard/gifts',
-        },
-        {
-          title: 'Gallery',
-          url: '/dashboard/gallery',
+          url: '/dashboard/rsvps',
         },
       ],
     },
+    {
+      title: 'Customization',
+      icon: SwatchBook,
+      items: [
+        {
+          title: 'Weddings',
+          url: '/customization/weddings',
+        },
+        {
+          title: 'Gallery',
+          url: '/customization/gallery',
+        },
+        {
+          title: 'Gifts',
+          url: '/customization/gifts',
+        },
+        {
+          title: 'Guests',
+          url: '/customization/guests',
+        },
+      ],
+    },
+    {
+      title: 'Transactions',
+      icon: ArrowRightLeft,
+      items: [
+        {
+          title: 'Orders',
+          url: '/transactions/payments',
+        },
+        {
+          title: 'Invoices',
+          url: '/transactions/invoices',
+        },
+      ],
+    }
 ]
 
 // Logika untuk status `isActive` (sudah benar)
@@ -107,7 +119,7 @@ const navMain = computed(() => {
 </script>
 
 <template>
-  <Sidebar v-bind="props">
+  <Sidebar v-bind="props" variant="inset">
     <SidebarHeader>
       <TeamSwitcher :teams="teams" />
     </SidebarHeader>

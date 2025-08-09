@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const headers = {
     'Authorization': `Bearer ${sessionToken.jwt}`,
+    'x-api-key': process.env.API_KEY,
   };
   
   const path = event.path.replace(/^\/api\/proxy\//, '');

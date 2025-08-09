@@ -30,7 +30,7 @@ async function fetchGifts() {
   }
   isLoading.value = true
   try {
-    const response = await $fetch<{ data: Gift[] }>(`/api/proxy/weddings/${selectedWeddingId.value}/gifts`)
+    const response = await $fetch<{ data: Gift[] }>(`/api/proxy/gifts/${selectedWeddingId.value}`)
     gifts.value = response.data
   } catch (error) {
     toast.error('Gagal memuat data hadiah.')
@@ -55,7 +55,7 @@ function openEditDialog(gift: Gift) {
 async function handleDelete(giftId: string) {
   if (!confirm('Hapus informasi hadiah ini?')) return
   try {
-    await $fetch(`/api/proxy/weddings/${selectedWeddingId.value}/gifts/${giftId}`, { method: 'DELETE' })
+    await $fetch(`/api/proxy/gifts/${giftId}`, { method: 'DELETE' })
     toast.success('Informasi hadiah dihapus.')
     fetchGifts()
   } catch (error: any) {
@@ -73,25 +73,6 @@ function onFormSuccess() {
   <Head>
       <title>Gifts</title>
   </Head>
-  <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-        <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1" />
-          <Separator orientation="vertical" class="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="/dashboard">
-                  Dashboard
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Gifts</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
   <div class="p-8">
     <div class="flex items-center justify-between mb-6">
       <div>
@@ -104,7 +85,7 @@ function onFormSuccess() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem v-for="wedding in weddings" :key="wedding.id" :value="wedding.id">
-              {{ wedding.pengantin_pria }} & {{ wedding.pengantin_wanita }}
+              {{ wedding.groom }} & {{ wedding.bride }}
             </SelectItem>
           </SelectContent>
         </Select>
@@ -128,14 +109,14 @@ function onFormSuccess() {
           <template v-else-if="gifts.length > 0">
             <TableRow v-for="gift in gifts" :key="gift.id">
               <TableCell class="font-medium capitalize flex items-center gap-2">
-                <component :is="gift.tipe === 'rekening' ? Banknote : Home" class="h-4 w-4 text-muted-foreground" />
-                {{ gift.tipe }}
+                <component :is="gift.type === 'rekening' ? Banknote : Home" class="h-4 w-4 text-muted-foreground" />
+                {{ gift.type }}
               </TableCell>
               <TableCell>
-                <div v-if="gift.tipe === 'rekening'" class="text-sm">
-                  <p>{{ gift.nama_bank }} - {{ gift.no_rek }}</p>
+                <div v-if="gift.type === 'rekening'" class="text-sm">
+                  <p>{{ gift.bankName }} - {{ gift.accountNumber }}</p>
                 </div>
-                <div v-else class="text-sm text-muted-foreground whitespace-pre-wrap">{{ gift.alamat }}</div>
+                <div v-else class="text-sm text-muted-foreground whitespace-pre-wrap">{{ gift.address }}</div>
               </TableCell>
               <TableCell class="text-right">
                 <Button variant="ghost" size="icon" @click="openEditDialog(gift)"><Edit class="h-4 w-4" /></Button>

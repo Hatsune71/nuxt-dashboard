@@ -31,8 +31,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
 
 definePageMeta({
   layout: 'dashboard',
@@ -51,26 +49,6 @@ const stats = computed(() => statsData.value?.data)
   <Head>
       <title>Dashboard</title>
   </Head>
-  <header class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-        <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1" />
-          <Separator orientation="vertical" class="mr-2 h-4" />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="/dashboard">
-                  Dashboard
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Home</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-      </header>
-
   <main class="flex flex-1 flex-col gap-4 p-4 pt-0">
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -147,16 +125,16 @@ const stats = computed(() => statsData.value?.data)
             <template v-else-if="recentWeddings && recentWeddings.length > 0">
               <TableRow v-for="wedding in recentWeddings" :key="wedding.id">
                 <TableCell>
-                  <div class="font-medium">{{ wedding.pengantin_pria }} & {{ wedding.pengantin_wanita }}</div>
+                  <div class="font-medium">{{ wedding.groom }} & {{ wedding.bride}}</div>
                 </TableCell>
                 <TableCell class="hidden sm:table-cell">
-                  <Badge variant="outline">{{ wedding.template.nama_template }}</Badge>
+                  <Badge variant="outline">{{ wedding.template.templateName }}</Badge>
                 </TableCell>
-                <TableCell class="hidden md:table-cell">{{ new Date(wedding.tanggal_akad).toLocaleDateString('id-ID', { dateStyle: 'long' }) }}</TableCell>
-                <TableCell class="hidden md:table-cell">{{ new Date(wedding.tanggal_resepsi).toLocaleDateString('id-ID', { dateStyle: 'long' }) }}</TableCell>
+                <TableCell class="hidden md:table-cell">{{ new Date(wedding.ceremonyDate).toLocaleDateString('id-ID', { dateStyle: 'long' }) }}</TableCell>
+                <TableCell class="hidden md:table-cell">{{ new Date(wedding.receptionDate).toLocaleDateString('id-ID', { dateStyle: 'long' }) }}</TableCell>
                 <TableCell class="text-right">
                   <Button as-child size="sm" variant="outline">
-                    <NuxtLink :to="`/dashboard/weddings`">
+                    <NuxtLink :to="`/customization/weddings`">
                       Kelola
                       <ArrowUpRight class="h-4 w-4 ml-2" />
                     </NuxtLink>

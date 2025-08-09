@@ -4,17 +4,17 @@ import { toast } from "vue-sonner"
 
 const props = defineProps<{
   modelValue?: Wedding | null
-  templates: { id: string, nama_template: string }[]
+  templates: { id: string, templateName: string }[]
 }>()
 
 const emit = defineEmits(['success'])
 
 const isLoading = ref(false)
 const formData = ref({
-  pengantin_pria: '',
-  pengantin_wanita: '',
-  tanggal_akad: '',
-  tanggal_resepsi: '',
+  groom: '',
+  bride: '',
+  ceremonyDate: '',
+  receptionDate: '',
   location: '',
   templateId: '',
 })
@@ -24,18 +24,17 @@ const { data: templates } = await useFetch('/api/proxy/templates')
 watchEffect(() => {
   if (props.modelValue) {
     formData.value = {
-      pengantin_pria: props.modelValue.pengantin_pria,
-      pengantin_wanita: props.modelValue.pengantin_wanita,
-      // Format tanggal agar sesuai dengan input type="datetime-local"
-      tanggal_akad: new Date(props.modelValue.tanggal_akad).toISOString().slice(0, 16),
-      tanggal_resepsi: new Date(props.modelValue.tanggal_resepsi).toISOString().slice(0, 16),
+      groom: props.modelValue.groom,
+      bride: props.modelValue.bride,
+      ceremonyDate: new Date(props.modelValue.ceremonyDate).toISOString().slice(0, 16),
+      receptionDate: new Date(props.modelValue.receptionDate).toISOString().slice(0, 16),
       location: props.modelValue.location,
       templateId: props.modelValue.templateId,
     }
   } else {
     // Reset form jika dalam mode create
     formData.value = {
-      pengantin_pria: '', pengantin_wanita: '', tanggal_akad: '', tanggal_resepsi: '', location: '', templateId: '',
+      groom: '', bride: '', ceremonyDate: '', receptionDate: '', location: '', templateId: '',
     }
   }
 })
@@ -54,8 +53,8 @@ async function handleSubmit() {
       method,
       body: {
         ...formData.value,
-        tanggal_akad: new Date(formData.value.tanggal_akad).toISOString(),
-        tanggal_resepsi: new Date(formData.value.tanggal_resepsi).toISOString(),
+        ceremonyDate: new Date(formData.value.ceremonyDate).toISOString(),
+        receptionDate: new Date(formData.value.receptionDate).toISOString(),
       },
     })
 
@@ -73,19 +72,19 @@ async function handleSubmit() {
   <form class="space-y-4" @submit.prevent="handleSubmit">
     <div>
       <Label for="pria" class="mb-4">Nama Pengantin Pria</Label>
-      <Input id="pria" v-model="formData.pengantin_pria" required />
+      <Input id="pria" v-model="formData.groom" required />
     </div>
     <div>
       <Label for="wanita" class="mb-4">Nama Pengantin Wanita</Label>
-      <Input id="wanita" v-model="formData.pengantin_wanita" required />
+      <Input id="wanita" v-model="formData.bride" required />
     </div>
     <div>
       <Label for="akad" class="mb-4">Tanggal Akad</Label>
-      <Input id="akad" v-model="formData.tanggal_akad" type="datetime-local" required />
+      <Input id="akad" v-model="formData.ceremonyDate" type="datetime-local" required />
     </div>
     <div>
       <Label for="resepsi" class="mb-4">Tanggal Resepsi</Label>
-      <Input id="resepsi" v-model="formData.tanggal_resepsi" type="datetime-local" required />
+      <Input id="resepsi" v-model="formData.receptionDate" type="datetime-local" required />
     </div>
     <div>
       <Label for="location" class="mb-4">Lokasi</Label>
@@ -99,7 +98,7 @@ async function handleSubmit() {
         </SelectTrigger>
         <SelectContent>
           <SelectItem v-for="template in templates" :key="template.id" :value="template.id">
-            {{ template.nama_template }}
+            {{ template.templateName }}
           </SelectItem>
         </SelectContent>
       </Select>

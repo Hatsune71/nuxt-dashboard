@@ -3,7 +3,7 @@ import 'vue-sonner/style.css'
 </script>
 
 <template>
-  <NuxtLoadingIndicator />
+  <NuxtLoadingIndicator :throttle="0"/>
   <NuxtLayout>
     <NuxtPage/>
   </NuxtLayout> 

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
-  modules: ['shadcn-nuxt', '@sidebase/nuxt-auth'],
+  modules: ['shadcn-nuxt', '@sidebase/nuxt-auth','@nuxtjs/color-mode'],
   shadcn: {
     prefix: '',
     componentDir: './app/components/ui'
@@ -31,5 +31,8 @@ export default defineNuxtConfig({
     public: {
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
     }
+  },
+  colorMode: {
+    classSuffix: "",
   },
 })

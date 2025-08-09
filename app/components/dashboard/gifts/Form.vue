@@ -12,22 +12,22 @@ const emit = defineEmits(['success'])
 
 const isLoading = ref(false)
 const formData = ref({
-  tipe: 'rekening',
-  nama_bank: '',
-  no_rek: '',
-  alamat: '',
+  type: 'rekening',
+  bankName: '',
+  accountNumber: '',
+  address: '',
 })
 
 watchEffect(() => {
   if (props.modelValue) {
     formData.value = {
-      tipe: props.modelValue.tipe,
-      nama_bank: props.modelValue.nama_bank || '',
-      no_rek: props.modelValue.no_rek || '',
-      alamat: props.modelValue.alamat || '',
+      type: props.modelValue.type,
+      bankName: props.modelValue.bankName || '',
+      accountNumber: props.modelValue.accountNumber || '',
+      address: props.modelValue.address || '',
     }
   } else {
-    formData.value = { tipe: 'rekening', nama_bank: '', no_rek: '', alamat: '' }
+    formData.value = { type: 'rekening', bankName: '', accountNumber: '', address: '' }
   }
 })
 
@@ -35,26 +35,26 @@ async function handleSubmit() {
   if (!props.weddingId) return
   isLoading.value = true
 
-  // Siapkan payload yang bersih berdasarkan tipe yang dipilih
+  // Siapkan payload yang bersih berdasarkan type yang dipilih
   const payload: {
     weddingId: string;
-    tipe: string;
-    nama_bank?: string | null;
-    no_rek?: string | null;
-    alamat?: string | null;
+    type: string;
+    bankName?: string | null;
+    accountNumber?: string | null;
+    address?: string | null;
   } = {
     weddingId: props.weddingId,
-    tipe: formData.value.tipe,
+    type: formData.value.type,
   };
 
-  if (formData.value.tipe === 'rekening') {
-    payload.nama_bank = formData.value.nama_bank;
-    payload.no_rek = formData.value.no_rek;
-    payload.alamat = null; // Secara eksplisit null-kan kolom alamat
-  } else if (formData.value.tipe === 'hadiah') {
-    payload.alamat = formData.value.alamat;
-    payload.nama_bank = null; // Secara eksplisit null-kan kolom bank
-    payload.no_rek = null;
+  if (formData.value.type === 'rekening') {
+    payload.bankName = formData.value.bankName;
+    payload.accountNumber = formData.value.accountNumber;
+    payload.address = null; // Secara eksplisit null-kan kolom address
+  } else if (formData.value.type === 'hadiah') {
+    payload.address = formData.value.address;
+    payload.bankName = null; // Secara eksplisit null-kan kolom bank
+    payload.accountNumber = null;
   }
 
   try {
@@ -62,8 +62,8 @@ async function handleSubmit() {
     
     // UBAH BAGIAN INI: Sesuaikan URL agar menggunakan proxy dan nested route
     const url = props.modelValue
-      ? `/api/proxy/weddings/${props.weddingId}/gifts/${props.modelValue.id}`
-      : `/api/proxy/weddings/${props.weddingId}/gifts`
+      ? `/api/proxy/gifts/gifts/${props.modelValue.id}`
+      : `/api/proxy/gifts/${props.weddingId}`
     
     await $fetch(url, {
       method,
@@ -85,7 +85,7 @@ async function handleSubmit() {
   <form class="space-y-4" @submit.prevent="handleSubmit">
     <div>
       <Label class="mb-4">Tipe Hadiah</Label>
-      <RadioGroup v-model="formData.tipe" class="flex items-center gap-4 mt-2">
+      <RadioGroup v-model="formData.type" class="flex items-center gap-4 mt-2">
         <div class="flex items-center gap-2">
           <RadioGroupItem id="g1" value="rekening" />
           <Label for="g1">Transfer Bank</Label>
@@ -97,21 +97,21 @@ async function handleSubmit() {
       </RadioGroup>
     </div>
 
-    <template v-if="formData.tipe === 'rekening'">
+    <template v-if="formData.type === 'rekening'">
       <div>
-        <Label for="nama_bank" class="mb-4">Nama Bank</Label>
-        <Input id="nama_bank" v-model="formData.nama_bank" placeholder="Contoh: BCA" />
+        <Label for="bankName" class="mb-4">Nama Bank</Label>
+        <Input id="bankName" v-model="formData.bankName" placeholder="Contoh: BCA" />
       </div>
       <div>
-        <Label for="no_rek" class="mb-4">Nomor Rekening</Label>
-        <Input id="no_rek" v-model="formData.no_rek" placeholder="1234567890" />
+        <Label for="accountNumber" class="mb-4">Nomor Rekening</Label>
+        <Input id="accountNumber" v-model="formData.accountNumber" placeholder="1234567890" />
       </div>
     </template>
 
-    <template v-if="formData.tipe === 'hadiah'">
+    <template v-if="formData.type === 'hadiah'">
       <div>
-        <Label for="alamat" class="mb-4">Alamat Pengiriman</Label>
-        <Input id="alamat" v-model="formData.alamat" placeholder="Isi dengan alamat lengkap" />
+        <Label for="address" class="mb-4">Alamat Pengiriman</Label>
+        <Input id="address" v-model="formData.address" placeholder="Isi dengan address lengkap" />
       </div>
     </template>
     
