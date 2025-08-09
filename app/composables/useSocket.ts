@@ -13,10 +13,7 @@ export const useSocket = () => {
       transports: ['websocket'],
     });
   }
-
-  // Fungsi ini sekarang secara otomatis mendapatkan userId dari sesi
   const joinUserRoom = () => {
-    // Panggil useAuth() di sini, di dalam fungsi composable
     const { data: session } = useAuth();
     const userId = session.value?.user?.id;
     
@@ -28,11 +25,10 @@ export const useSocket = () => {
   };
 
   const leaveUserRoom = () => {
-    const { data: session } = useAuth();
+    const { data: session,status } = useAuth();
     const userId = session.value?.user?.id;
-    if (socket && userId) {
-      // Implementasi di server jika diperlukan
-      // socket.emit('leave_user_room', userId);
+    if (socket && status.value === 'authenticated') {
+      socket.emit('leave_user_room', userId);
     }
   };
 

@@ -18,27 +18,23 @@ interface Notification {
   createdAt: string;
 }
 
-const { socket, joinUserRoom } = useSocket();
+const { socket, joinUserRoom , leaveUserRoom} = useSocket();
 
 const notifications = ref<Notification[]>([]);
 const unreadCount = computed(() => notifications.value.length);
 
-// Fungsi untuk menangani notifikasi baru
 const handleNewNotification = (newNotification: Notification) => {
   notifications.value.unshift(newNotification);
   
-  // Tampilkan toast menggunakan vue-sonner
   toast.info(newNotification.message, {
     description: `Diterima pada: ${formatDate(newNotification.createdAt)}`,
     duration: 5000,
   });
 };
 
-// Fungsi untuk menghapus notifikasi
 const deleteNotification = async (notificationId: string) => {
   const originalNotifications = [...notifications.value];
   
-  // Hapus dari UI terlebih dahulu (Optimistic UI)
   notifications.value = notifications.value.filter(n => n.id !== notificationId);
 
   try {
@@ -48,7 +44,6 @@ const deleteNotification = async (notificationId: string) => {
     toast.success('Notifikasi berhasil dihapus.');
   } catch (error) {
     console.error(`Gagal menghapus notifikasi ${notificationId}:`, error);
-    // Kembalikan state jika API gagal
     notifications.value = originalNotifications;
     toast.error('Gagal menghapus notifikasi.');
   }
@@ -84,6 +79,7 @@ onUnmounted(() => {
   if (socket) {
     socket.off('new_notification', handleNewNotification);
   }
+  leaveUserRoom();
 });
 
 const formatDate = (dateString: string) => {

@@ -34,18 +34,13 @@ export default NuxtAuthHandler({
                             password: credentials.password,
                         },
                     });
-
-                    // Pastikan backend mengembalikan data yang Anda harapkan
                     if (response && (response as any).token) {
-                        // 'response' akan menjadi objek 'user' di callback jwt
                         return response;
                     }
                     return null;
 
                 } catch (error: any) {
                     console.error('Login error:', error.data?.message || error);
-                    // Penting: Throw error agar bisa ditangkap di frontend, atau return null untuk gagal secara diam-diam.
-                    // Returning null adalah standar NextAuth untuk kegagalan otorisasi.
                     return null;
                 }
             },
@@ -69,6 +64,7 @@ export default NuxtAuthHandler({
                         if (backendResponse && (backendResponse as any).token) {
                             token.user = (backendResponse as any).data;
                             token.jwt = (backendResponse as any).token;
+                            token.id = (backendResponse as any).data.id;
                         } else {
                             return null;
                         }
@@ -79,6 +75,7 @@ export default NuxtAuthHandler({
                 } else if (account?.provider === 'credentials') {
                     token.user = (user as any).user;
                     token.jwt = (user as any).token;
+                    token.id = (user as any).id;
                 }
             return token;
         },
@@ -86,6 +83,7 @@ export default NuxtAuthHandler({
         session: async ({ session, token }) => {
             if (token) {
                 session.user = token.user as any;
+                (session as any).user.id = token.id as string;
                 session.jwt = token.jwt as string;
             }
             return session;
