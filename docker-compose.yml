@@ -13,10 +13,9 @@ services:
       GOOGLE_CLIENT_ID: "365969610466-mgkgc3tgtubqa0k441dnrf0e6ia36tfa.apps.googleusercontent.com"
       GOOGLE_CLIENT_SECRET: "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"
       GOOGLE_CALLBACK_URL: "http://localhost/api/auth/callback/google"
-      NITRO_PORT: 3000
     expose:
-      - "3000"
-    mem_limit: 512m
+      - "3001"
+    mem_limit: 1024m
     restart: always
 
   nginx:
@@ -28,5 +27,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - nuxt1
+      - nuxt2
     restart: always
-    mem_limit: 512m
+    mem_limit: 256m
