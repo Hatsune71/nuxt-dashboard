@@ -1,16 +1,19 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+
 COPY . .
+
 RUN npm run build
 
-FROM node:20-alpine AS production
+FROM node:22-alpine
+
 WORKDIR /app
 
-COPY --from=builder /app/.output/server /app/.output/server
-COPY --from=builder /app/package.json /app/package.json
-COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/package.json ./package.json
+
 EXPOSE 3000
 
 CMD ["node", ".output/server/index.mjs"]

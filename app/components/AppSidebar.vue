@@ -11,10 +11,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 
-const props = withDefaults(defineProps<SidebarProps>(), {
+const props = withDefaults(defineProps<{
+  collapsible?: string
+}>(), {
   collapsible: 'icon',
 })
 

@@ -1,32 +1,26 @@
 services:
-  nuxt1:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: nuxt1
+  nuxt:
+    image: hatsnee/nuxt_dashboard:1.0.0
+    container_name: nuxt_service
     environment:
       NUXT_PUBLIC_API_BASE_URL: "http://localhost:3001/api/v1"
       NUXT_AUTH_SECRET: "secret_key_yang_sangat_aman_dan_panjang"
       AUTH_TRUST_HOST: "true"
-      AUTH_ORIGIN: "http://localhost/api/auth"
+      AUTH_ORIGIN: "https://dashboard.aeraapps.my.id/api/auth"
       API_KEY: "super-secret-gez-studio-up-2354132352523w5!!!!@@@$!@^&^^%^^^-API"
       GOOGLE_CLIENT_ID: "365969610466-mgkgc3tgtubqa0k441dnrf0e6ia36tfa.apps.googleusercontent.com"
       GOOGLE_CLIENT_SECRET: "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"
-      GOOGLE_CALLBACK_URL: "http://localhost/api/auth/callback/google"
-    expose:
-      - "3001"
-    mem_limit: 1024m
-    restart: always
+      GOOGLE_CALLBACK_URL: "https://dashboard.aeraapps.my.id/api/auth/callback/google"
+    restart: unless-stopped
 
   nginx:
-    image: nginx:latest
-    container_name: nuxt-nginx
+    image: nginx:alpine
+    container_name: nginx_proxy_service
+    mem_limit: 512m
+    restart: unless-stopped
     ports:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - nuxt1
-      - nuxt2
-    restart: always
-    mem_limit: 256m
+      - nuxt

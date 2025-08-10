@@ -6,7 +6,7 @@ export const useSocket = () => {
   // Inisialisasi socket hanya sekali
   if (!socket && process.client) {
     const runtimeConfig = useRuntimeConfig();
-    const SERVER_URL = runtimeConfig.public.backendUrl || 'http://localhost:3001';
+    const SERVER_URL = runtimeConfig.public.apiBaseUrl || 'http://localhost:3000';
     
     socket = io(SERVER_URL, {
       autoConnect: true,
