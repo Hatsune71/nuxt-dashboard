@@ -14,21 +14,6 @@ export default NuxtAuthHandler({
         signIn: '/login',
     },
 
-    session: {
-    strategy: 'jwt',
-    },
-
-    cookies: {
-        sessionToken: {
-        name: `__Secure-next-auth.session-token`,
-        options: {
-            httpOnly: true,
-            sameSite: 'none',
-            secure: true
-            }
-        }
-    },
-
     providers: [
         GoogleProvider.default({
             clientId: process.env.GOOGLE_CLIENT_ID,
@@ -83,6 +68,7 @@ export default NuxtAuthHandler({
                         }
 
                     } catch (error) {
+                        console.error('Google auth error:', error);
                         return token;
                     }
                 } else if (account?.provider === 'credentials') {
@@ -94,12 +80,9 @@ export default NuxtAuthHandler({
         },
         
         session: async ({ session, token }) => {
-            if (!session.user) {
-                session.user = {} as any;
-            }
             if (token) {
                 session.user = token.user as any;
-                session.user.id = token.id as string;
+                (session as any).user.id = token.id as string;
                 session.jwt = token.jwt as string;
             }
             return session;
