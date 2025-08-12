@@ -13,64 +13,57 @@ const isLoadingGoogle = ref(false)
 const showPassword = ref(false)
 
 // Fungsi untuk login dengan Email/Password
-async function handleCredentialsLogin() {
+function handleCredentialsLogin() {
   isLoadingCredentials.value = true
-  try {
-    const result = await signIn('credentials', {
-      email: email.value,
-      password: password.value,
-      redirect: false,
+  signIn('credentials', {
+    email: email.value,
+    password: password.value,
+    redirect: '/dashboard',
+  })
+    .then((result) => {
+      if (result?.error) {
+        toast.error('Login Failed', {
+          description: 'Please check your email and password.',
+        })
+      } else {
+        toast.success('Login successful!')
+        navigateTo('/dashboard')
+      }
     })
-
-    // Logika ini sudah benar, kita hanya memastikannya ada di dalam 'try'
-    if (result?.error) {
-      // Error yang diharapkan (misal: kredensial salah)
-      toast.error('Login Failed', {
-        description: 'Please check your email and password.',
+    .catch((error) => {
+      console.error('An unexpected error occurred during credentials login:', error)
+      toast.error('An Unexpected Error Occurred', {
+        description: 'Could not connect to the server. Please try again later.',
       })
-    } else {
-      // Berhasil
-      toast.success('Login successful!')
-      return navigateTo('/dashboard')
-    }
-  } catch (error) {
-    // Menangkap error tak terduga (misal: masalah jaringan, server down)
-    console.error('An unexpected error occurred during credentials login:', error)
-    toast.error('An Unexpected Error Occurred', {
-      description: 'Could not connect to the server. Please try again later.',
     })
-  } finally {
-    // Ini akan selalu berjalan, baik berhasil maupun gagal
-    isLoadingCredentials.value = false
-  }
+    .finally(() => {
+      isLoadingCredentials.value = false
+    })
 }
 
 // Fungsi untuk login dengan Google
-async function handleGoogleLogin() {
+function handleGoogleLogin() {
   isLoadingGoogle.value = true
-  try {
-    const result = await signIn('google', { redirect: false })
-
-    if (result?.error) {
-      // Error yang diharapkan (misal: popup diblokir, akun tidak diizinkan)
-      toast.error('Google Login Failed', {
-        description: 'Please try again.',
-      })
-    } else {
-      // Berhasil
-      toast.success('Google Login successful!')
-      return navigateTo('/dashboard')
-    }
-  } catch (error) {
-    // Menangkap error tak terduga
-    console.error('An unexpected error occurred during Google login:', error)
-    toast.error('An Unexpected Error Occurred', {
-      description: 'Could not complete the Google sign-in. Please try again.',
+  signIn('google', { redirect: '/dashboard' })
+    .then((result) => {
+      if (result?.error) {
+        toast.error('Google Login Failed', {
+          description: 'Please try again.',
+        })
+      } else {
+        toast.success('Google Login successful!')
+        navigateTo('/dashboard')
+      }
     })
-  } finally {
-    // Ini akan selalu berjalan
-    isLoadingGoogle.value = false
-  }
+    .catch((error) => {
+      console.error('An unexpected error occurred during Google login:', error)
+      toast.error('An Unexpected Error Occurred', {
+        description: 'Could not complete the Google sign-in. Please try again.',
+      })
+    })
+    .finally(() => {
+      isLoadingGoogle.value = false
+    })
 }
 </script>
 

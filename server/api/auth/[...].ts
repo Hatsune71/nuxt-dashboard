@@ -88,4 +88,18 @@ export default NuxtAuthHandler({
             return session;
         },
     },
+    session: {
+    strategy: 'jwt',
+    },
+
+    cookies: {
+        sessionToken: {
+        name: `__Secure-next-auth.session-token`,
+        options: {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+            }
+        }
+    },
 });

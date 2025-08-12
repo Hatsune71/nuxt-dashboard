@@ -9,37 +9,38 @@ const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
 
-async function handleRegister() {
+function handleRegister() {
   isLoading.value = true
-  try {
-    await $fetch('/api/auth/register', {
-      method: 'POST',
-      body: { name: name.value, email: email.value, password: password.value },
-    })
-
-    const res = await signIn('credentials', {
-      email: email.value,
-      password: password.value,
-      redirect: false,
-    })
-    
-    if (res?.error) {
-       toast.error('Login after registration failed', { description: res.error })
-    } else {
-       toast.success('Registration successful!')
-       await navigateTo('/dashboard')
-    }
-
-  } catch (error: any) {
-toast.error('Registration Failed', {
-    description:
-      error?.data?.message ||
-      error?.statusMessage ||
-      'An unexpected error occurred.',
+  $fetch('/api/auth/register', {
+    method: 'POST',
+    body: { name: name.value, email: email.value, password: password.value },
   })
-  } finally {
-    isLoading.value = false
-  }
+    .then(() => {
+      return signIn('credentials', {
+        email: email.value,
+        password: password.value,
+        redirect: false,
+      })
+    })
+    .then((res) => {
+      if (res?.error) {
+        toast.error('Login after registration failed', { description: res.error })
+      } else {
+        toast.success('Registration successful!')
+        navigateTo('/dashboard')
+      }
+    })
+    .catch((error) => {
+      toast.error('Registration Failed', {
+        description:
+          error?.data?.message ||
+          error?.statusMessage ||
+          'An unexpected error occurred.',
+      })
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
 </script>
 
